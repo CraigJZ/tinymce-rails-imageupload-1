@@ -22,7 +22,7 @@
            //     {text: 'Large',    value: 'large'},
             //    {text: 'Original', value: 'original'}
             //]},
-            {type: 'textbox', id: 'alt', name: 'alt',  label: ed.translate('Image desscription') },
+            {type: 'textbox', id: 'alt', name: 'alt',  label: ed.translate('Image description') },
             {type: 'textbox', id: 'size', name: 'size',  label: ed.translate('Medium, Large or Original') },
             {type: 'container', classes: 'error', html: "<p style='color: #b94a48;'>&nbsp;</p>"},
           ],
