@@ -17,13 +17,13 @@
           body: [
             {type: 'iframe',  url: 'javascript:void(0)'},
             {type: 'textbox', name: 'file', label: ed.translate('Choose an image'), subtype: 'file'},
-            {type: 'textbox', name: 'alt',  label: ed.translate('Image desscription')},
-            {type: 'listbox', name: 'size', label: ed.translate('Image Size'),values: [
-                {text: 'Medium', value: 'medium'},
-                {text: 'Large', value: 'large'},
-                {text: 'Original', value: 'original'}
-            ]},
-
+            //{type: 'listbox', id: 'size', name: 'size', label: ed.translate('Image Size'),values: [
+             //   {text: 'Medium',   value: 'medium', name: 'size'},
+           //     {text: 'Large',    value: 'large'},
+            //    {text: 'Original', value: 'original'}
+            //]},
+            {type: 'textbox', id: 'alt', name: 'alt',  label: ed.translate('Image desscription') },
+            {type: 'textbox', id: 'size', name: 'size',  label: ed.translate('Medium, Large or Original') },
             {type: 'container', classes: 'error', html: "<p style='color: #b94a48;'>&nbsp;</p>"},
           ],
           buttons: [
@@ -79,7 +79,8 @@
           var ctrl = inputs[i];
 
           if(ctrl.tagName.toLowerCase() == 'input' && ctrl.type != "hidden") {
-            ctrl.name = ctrl.type == "file" ? "file" : "alt";
+            ctrl.name = ctrl.type == "file" ? "file" : // "alt";
+            ctrl.name = ctrl.id == "alt" ? "alt" : "size";
           }
         }
 
