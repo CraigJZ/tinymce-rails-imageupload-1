@@ -17,11 +17,14 @@
           body: [
             {type: 'iframe',  url: 'javascript:void(0)'},
             {type: 'textbox', name: 'file', label: ed.translate('Choose an image'), subtype: 'file'},
-            {type: 'textbox', name: 'alt',  label: ed.translate('Image description')},
-            {type: 'container', classes: 'error', html: "<p style='color: #b94a48;'>&nbsp;</p>"},
+            {type: 'textbox', name: 'alt',  label: ed.translate('Image desscription')},
+            {type: 'listbox', name: 'size', label: ed.translate('Image Size'),values: [
+                {text: 'Medium', value: 'medium'},
+                {text: 'Large', value: 'large'},
+                {text: 'Original', value: 'original'}
+            ]},
 
-            // Trick TinyMCE to add a empty div that "preloads" the throbber image
-            {type: 'container', classes: 'throbber'},
+            {type: 'container', classes: 'error', html: "<p style='color: #b94a48;'>&nbsp;</p>"},
           ],
           buttons: [
             {
@@ -76,18 +79,7 @@
           var ctrl = inputs[i];
 
           if(ctrl.tagName.toLowerCase() == 'input' && ctrl.type != "hidden") {
-            if(ctrl.type == "file") {
-              ctrl.name = "file";
-
-              // Hack styles
-              tinymce.DOM.setStyles(ctrl, {
-                'border': 0,
-                'boxShadow': 'none',
-                'webkitBoxShadow': 'none',
-              });
-            } else {
-              ctrl.name = "alt";
-            }
+            ctrl.name = ctrl.type == "file" ? "file" : "alt";
           }
         }
 
@@ -135,18 +127,25 @@
       }
 
       function handleResponse(ret) {
+        console.group("Handling response");
+        console.log("Raw", ret)
         try {
           var json = tinymce.util.JSON.parse(ret);
+          console.log("Parsed", json);
 
           if(json["error"]) {
+            console.log("It has an error!", json["error"]["message"]);
             handleError(json["error"]["message"]);
           } else {
+            console.log("Inserting", buildHTML(json));
             ed.execCommand('mceInsertContent', false, buildHTML(json));
             ed.windowManager.close();
           }
         } catch(e) {
+          console.log("Bad response :(", e);
           handleError('Got a bad response from the server');
         }
+        console.groupEnd();
       }
 
       function clearErrors() {
@@ -157,6 +156,7 @@
       }
 
       function handleError(error) {
+        console.log("Handling error", error);
         var message = win.find(".error")[0].getEl();
 
         if(message)
@@ -176,9 +176,8 @@
 
       function buildHTML(json) {
         var default_class = ed.getParam("uploadimage_default_img_class", "");
-        var figure = ed.getParam("uploadimage_figure", false);
         var alt_text = getInputValue("alt");
-
+        var size_text = getInputValue("size");
         var imgstr = "<img src='" + json["image"]["url"] + "'";
 
         if(default_class != "")
@@ -188,28 +187,10 @@
           imgstr += " height='" + json["image"]["height"] + "'";
         if(json["image"]["width"])
           imgstr += " width='"  + json["image"]["width"]  + "'";
-
+        imgstr += " size='" + size_text + "'";
         imgstr += " alt='" + alt_text + "'/>";
 
-        if(figure) {
-          var figureClass = ed.getParam("uploadimage_figure_class", "figure");
-          var figcaptionClass = ed.getParam("uploadimage_figcaption_class", "figcaption");
-
-          var figstr = "<figure";
-
-          if (figureClass !== "")
-            figstr += " class='" + figureClass + "'";
-          figstr += ">" + imgstr;
-          figstr += "<figcaption";
-          if (figcaptionClass != "")
-            figstr += " class='" + figcaptionClass + "'";
-          figstr += ">" + alt_text + "</figcaption>";
-          figstr += "</figure>";
-
-          return figstr;
-        } else {
-          return imgstr;
-        }
+        return imgstr;
       }
 
       function getInputValue(name) {
