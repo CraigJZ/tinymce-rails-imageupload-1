@@ -179,7 +179,7 @@
         var default_class = ed.getParam("uploadimage_default_img_class", "");
         var alt_text = getInputValue("alt");
         var size_text = getInputValue("size");
-        var imgstr = "<a href='" + json["image"]["url"] + "'";
+        var imgstr = "<a href='" + json["image"]["original"] + "'";
         imgstr += " rel='" + "lightbox" + "'";
         imgstr += " title='" + json["image"]["title"] + "'";
         imgstr += " class='" + "cboxElement" + "'";
