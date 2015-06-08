@@ -179,7 +179,12 @@
         var default_class = ed.getParam("uploadimage_default_img_class", "");
         var alt_text = getInputValue("alt");
         var size_text = getInputValue("size");
-        var imgstr = "<img src='" + json["image"]["url"] + "'";
+        var imgstr = "<a href='" + json["image"]["url"] + "'";
+        imgstr += " rel='" + "lightbox" + "'";
+        imgstr += " title='" + json["image"]["title"] + "'";
+        imgstr += " class='" + "cboxElement" + "'";
+        imgstr += "/>";
+        imgstr += "<img src='" + json["image"]["url"] + "'";
 
         if(default_class != "")
           imgstr += " class='" + default_class + "'";
@@ -190,7 +195,7 @@
           imgstr += " width='"  + json["image"]["width"]  + "'";
         imgstr += " size='" + size_text + "'";
         imgstr += " alt='" + alt_text + "'/>";
-
+        imgstr += "</a>";
         return imgstr;
       }
 
