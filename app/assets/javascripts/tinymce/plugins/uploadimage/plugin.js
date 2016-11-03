@@ -92,7 +92,7 @@
           return handleError('You must choose a file');
         }
 
-        if(getInputValue("description") == "") {
+        if(getInputValue("alt") == "") {
           return handleError('You must enter a description');
         }
 
