@@ -92,6 +92,10 @@
           return handleError('You must choose a file');
         }
 
+        if(getInputValue("alt") == "") {
+          return handleError('You must enter a description');
+        }
+
         throbber = new top.tinymce.ui.Throbber(win.getEl());
         throbber.show();
 
